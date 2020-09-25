@@ -8,5 +8,12 @@
     {% for category in categories %}
         <p><a href="{% url 'category' category.slug %}">{{ category.name }}</a></p>
     {% endfor %}
+<hr>
+    {% for post in post_list %}
+        <h2><a>{{ post.title }}</a></h2>
+        <p>{{ post.mini_text }}</p>
+        <small>{{ post.published_date }}</small>
+    {% endfor %}
+
 </body>
 </html>
