@@ -13,6 +13,8 @@
         <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
         <p>{{ post.mini_text }}</p>
         <small>{{ post.published_date }}</small>
+        <small>Просмотров - {{ post.viewed }}</small>
+        <small>Комментариев - {{ post.comment_set.count }}</small>
     {% endfor %}
 
 </body>

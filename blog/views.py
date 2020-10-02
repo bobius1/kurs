@@ -4,7 +4,7 @@ from datetime import datetime
 from django.shortcuts import render
 from django.views.generic.base import View
 # from .admin import Category, Post
-from .models import Category, Post
+from .models import Category, Post, Comment
 
 # Create your views here.
 
@@ -45,7 +45,10 @@ class PostDetaiView(View):
     def get(self, request, category, slug):
         category_list = Category.objects.all()
         post = Post.objects.get(slug=slug)
-        return render(request, "blog/post_detail.html", {"categories": category_list, "post": post})
+        # comments = Comment.objects.filter(post=post) #при выгрузке комментариев через views.py
+        # tags = post.get_tags()
+        # print(tags)
+        return render(request, "blog/post_detail.html", {"categories": category_list, "post": post })
 
 class CategoryPostView(View):
     """Вывод перечня постов"""

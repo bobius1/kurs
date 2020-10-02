@@ -79,7 +79,7 @@ class Post(models.Model):
         null=True
     )
     image = models.ImageField(verbose_name='Главная фотография', upload_to="post/", null=True, blank=True)
-    tags = models.ManyToManyField(Tag, verbose_name="Тег", blank=True)
+    tags = models.ManyToManyField(Tag, verbose_name="Тег", blank=True, related_name="tag")
     category = models.ForeignKey(
         Category,
         verbose_name="Категория",
@@ -93,8 +93,18 @@ class Post(models.Model):
     status = models.BooleanField(verbose_name="Просмотрено", default=False)
     sort = models.PositiveBigIntegerField(verbose_name="Порядок", default=0)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tag = None
+
     def get_absolute_url(self):
         return reverse("detail_post", kwargs={'category': self.category.slug, 'slug': self.slug})
+
+    def get_tags(self):
+        return self.tags.all()
+
+    def get_comments_count(self):
+        return self.comment_set.count()
 
     """Возвращает"""
     def __str__(self):

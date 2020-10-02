@@ -12,9 +12,31 @@
 
         <h2>{{ post.title }}</h2>
         <p>{{ post.mini_text }}</p>
-{#        <p>{{ post.text }}</p>#}
-        <small>{{ post.published_date }}</small>
+        <p>Категория - {{ post.category }}</p>
+{#    Вывод полной статьи #}
+{#        <p>{{ post.text }}</p> #}
+{#    Другой метод #}
+{#         Теги - {% for tag in post.get_tags %}#}
+         Теги - {% for tag in post.tags.all %}
 
+                    {{ tag.name }},
+                {% endfor %}
+        <br>
+        <small>Автор: {{ post.author }} - {{ post.published_date }}</small>
+        <hr>
 
+        <h4>Комментарии</h4>
+{#    ВАРИАНТ 2#}
+{#    {% for comment in comments %}#}
+{#        Пользователь - {{ comment.author }}<br>#}
+{#        {{ comment.text }}<br>#}
+{#        Добавлен - {{ comment.created_data }}<br><br>#}
+{#    {% endfor %}#}
+{#    ВАРИАНТ 1#}
+    {% for comment in post.comment_set.all %}
+        Пользователь - {{ comment.author }}<br>
+        {{ comment.text }}<br>
+        Добавлен - {{ comment.created_data }}<br><br>
+    {% endfor %}
 </body>
 </html>
