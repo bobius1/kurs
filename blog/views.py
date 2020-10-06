@@ -25,6 +25,7 @@ from .models import Category, Post, Comment
 #     def post(self):
 #         pass
 
+
 class HomeView(View):
     """Home page"""
     def get(self, request):
@@ -40,7 +41,8 @@ class CategoryView(View):
         category = Category.objects.get(slug=category_name)
         return render(request, "blog/post_list.html", {"category": category})
 
-class PostDetaiView(View):
+
+class PostDetailView(View):
     """Вывод полной статьи"""
     def get(self, request, category, slug):
         category_list = Category.objects.all()
@@ -48,7 +50,8 @@ class PostDetaiView(View):
         # comments = Comment.objects.filter(post=post) #при выгрузке комментариев через views.py
         # tags = post.get_tags()
         # print(tags)
-        return render(request, "blog/post_detail.html", {"categories": category_list, "post": post })
+        return render(request, post.template, {"categories": category_list, "post": post })
+
 
 class CategoryPostView(View):
     """Вывод перечня постов"""

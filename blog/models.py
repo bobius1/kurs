@@ -104,7 +104,7 @@ class Post(models.Model):
         return self.tags.all()
 
     def get_comments_count(self):
-        return self.comment_set.count()
+        return self.comments.count()
 
     """Возвращает"""
     def __str__(self):
@@ -124,7 +124,12 @@ class Comment(models.Model):
         # null=True,
         # blank=True
     )
-    post = models.ForeignKey(Post, verbose_name="Статья", on_delete=models.CASCADE)
+    post = models.ForeignKey(
+        Post,
+        verbose_name="Статья",
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
     text = models.TextField(verbose_name='Комментарий')
     created_data = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True)
     moderation = models.BooleanField(default=True)
