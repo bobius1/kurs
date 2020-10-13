@@ -37,9 +37,12 @@ class HomeView(View):
 
 class CategoryView(View):
     """Вывод статей категории"""
-    def get(self, request, category_name):
-        category = Category.objects.get(slug=category_name)
-        return render(request, "blog/post_list.html", {"category": category})
+    def get(self, request, category_slug):
+        category = Category.objects.get(slug=category_slug)
+        posts = Post.objects.filter(
+            category__slug=category_slug, category__published=True, published=True
+        )
+        return render(request, posts.first().get_category_template(), {"post_list": posts})
 
 
 class PostDetailView(View):
