@@ -27,6 +27,9 @@ class Category(MPTTModel):
     paginated = models.PositiveIntegerField(verbose_name="Количество новостей на странице", default=5)
     sort = models.PositiveIntegerField(verbose_name="Порядок", default=0)
 
+    def get_absolute_url(self):
+        return reverse('category', kwargs={'category_slug': self.slug})
+
     # Возвращает имя категории
     def __str__(self):
         return self.name
@@ -42,6 +45,9 @@ class Tag(models.Model):
     name = models.CharField(verbose_name='Тег', max_length=100)
     slug = models.SlugField(verbose_name='url', max_length=100, unique=True)
     published = models.BooleanField(verbose_name='Отображать?', default=True)
+
+    def get_absolute_url(self):
+        return reverse('tag', kwargs={'slug': self.slug})
 
     def __str__(self):
         return self.name
@@ -113,6 +119,9 @@ class Post(models.Model):
     class Meta:
         verbose_name = "Новость"
         verbose_name_plural = "Новости"
+
+    def get_category_template(self):
+        return self.category.template
 
 
 class Comment(models.Model):

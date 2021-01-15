@@ -19,7 +19,7 @@
 {#         Теги - {% for tag in post.get_tags %}#}
          Теги - {% for tag in post.tags.all %}
 
-                    {{ tag.name }},
+                    <a href="{% url 'tag' tag.slug %}">{{ tag.name }}</a>,
                 {% endfor %}
         <br>
         <small>Автор: {{ post.author }} - {{ post.published_date }}</small>
@@ -33,7 +33,7 @@
 {#        Добавлен - {{ comment.created_data }}<br><br>#}
 {#    {% endfor %}#}
 {#    ВАРИАНТ 1#}
-    {% for comment in post.comment_set.all %}
+    {% for comment in post.comments.all %}
         Пользователь - {{ comment.author }}<br>
         {{ comment.text }}<br>
         Добавлен - {{ comment.created_data }}<br><br>
