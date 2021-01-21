@@ -25,13 +25,14 @@ from .models import Category, Post, Comment
 #         pass
 
 
-class HomeView(View):
-    """Home page"""
-    def get(self, request):
-        category_list = Category.objects.all()
-        post_list = Post.objects.filter(published_date__lte=datetime.now(), published=True)
-        print(category_list)
-        return render(request, "blog/post_list.html", {"categories": category_list, "post_list": post_list})
+# лишний класс который мы сократили
+# class HomeView(View):
+#     """Home page"""
+#     def get(self, request):
+#         category_list = Category.objects.all()
+#         post_list = Post.objects.filter(published_date__lte=datetime.now(), published=True)
+#         print(category_list)
+#         return render(request, "blog/post_list.html", {"categories": category_list, "post_list": post_list})
 
 
 class PostDetailView(View):
@@ -54,21 +55,27 @@ class CategoryPostView(View):
 
 class CategoryView(View):
     """Вывод статей категории"""
+    def get_queryset(self):
+        return Post.objects.filter(published_date__lte=datetime.now(), published=True)
+
     def get(self, request, category_slug=None, slug=None):
         # category = Category.objects.get(slug=category_slug)
-        posts = []
+        category_list = Category.objects.all()
+
         if category_slug is not None:
             posts = Post.objects.filter(
                 category__slug=category_slug, category__published=True, published=True, published_date__lte=datetime.now()
             )
         elif slug is not None:
             posts = Post.objects.filter(tags__slug=slug, published=True)
+        else:
+            posts = Post.objects.filter(published_date__lte=datetime.now(), published=True)
         if posts.exists():
             template = posts.first().get_category_template()
         else:
             template = "blog/post_list.html"
 
-        return render(request, template, {"post_list": posts})
+        return render(request, template, {"post_list": posts, "categories": category_list})
 
 # лишний класс который мы сократили
 # class TagView(View):
