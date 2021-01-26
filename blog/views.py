@@ -35,15 +35,7 @@ from .models import Category, Post, Comment
 #         return render(request, "blog/post_list.html", {"categories": category_list, "post_list": post_list})
 
 
-class PostDetailView(View):
-    """Вывод полной статьи"""
-    def get(self, request, category, slug):
-        category_list = Category.objects.all()
-        post = Post.objects.get(slug=slug)
-        # comments = Comment.objects.filter(post=post) #при выгрузке комментариев через views.py
-        # tags = post.get_tags()
-        # print(tags)
-        return render(request, post.template, {"categories": category_list, "post": post })
+
 
 
 class CategoryPostView(View):
@@ -53,7 +45,7 @@ class CategoryPostView(View):
         return render(request, "blog/post_list.html", {"posts": post_list})
 
 
-class CategoryView(View):
+class PostListView(View):
     """Вывод статей категории"""
     def get_queryset(self):
         return Post.objects.filter(published_date__lte=datetime.now(), published=True)
@@ -63,19 +55,30 @@ class CategoryView(View):
         category_list = Category.objects.all()
 
         if category_slug is not None:
-            posts = Post.objects.filter(
-                category__slug=category_slug, category__published=True, published=True, published_date__lte=datetime.now()
+            posts = self.get_queryset().filter(
+                category__slug=category_slug, category__published=True
             )
         elif slug is not None:
-            posts = Post.objects.filter(tags__slug=slug, published=True)
+            posts = self.get_queryset().filter(tags__slug=slug)
         else:
-            posts = Post.objects.filter(published_date__lte=datetime.now(), published=True)
+            posts = self.get_queryset()
         if posts.exists():
             template = posts.first().get_category_template()
         else:
             template = "blog/post_list.html"
 
         return render(request, template, {"post_list": posts, "categories": category_list})
+
+
+class PostDetailView(View):
+    """Вывод полной статьи"""
+    def get(self, request, category, slug):
+        category_list = Category.objects.all()
+        post = Post.objects.get(slug=slug)
+        # comments = Comment.objects.filter(post=post) #при выгрузке комментариев через views.py
+        # tags = post.get_tags()
+        # print(tags)
+        return render(request, post.template, {"categories": category_list, "post": post })
 
 # лишний класс который мы сократили
 # class TagView(View):
