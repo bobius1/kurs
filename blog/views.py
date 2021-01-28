@@ -1,6 +1,8 @@
 # from django.http import HttpResponse
 from datetime import datetime
-from django.shortcuts import render
+
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
 from django.views.generic.base import View
 # from .admin import Category, Post
 from .models import Category, Post, Comment
@@ -59,7 +61,7 @@ class PostListView(View):
                 category__slug=category_slug, category__published=True
             )
         elif slug is not None:
-            posts = self.get_queryset().filter(tags__slug=slug)
+            posts = self.get_queryset().filter(tags__slug=slug, tags__published=True)
         else:
             posts = self.get_queryset()
         if posts.exists():
@@ -72,9 +74,9 @@ class PostListView(View):
 
 class PostDetailView(View):
     """Вывод полной статьи"""
-    def get(self, request, category, slug):
+    def get(self, request, **kwargs):
         category_list = Category.objects.all()
-        post = Post.objects.get(slug=slug)
+        post = get_object_or_404(Post, slug=kwargs.get('slug'))
         # comments = Comment.objects.filter(post=post) #при выгрузке комментариев через views.py
         # tags = post.get_tags()
         # print(tags)
