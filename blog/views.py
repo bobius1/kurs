@@ -54,7 +54,7 @@ class PostListView(View):
 
     def get(self, request, category_slug=None, slug=None):
         # category = Category.objects.get(slug=category_slug)
-        category_list = Category.objects.all()
+        category_list = Category.objects.filter(published=True)
 
         if category_slug is not None:
             posts = self.get_queryset().filter(
@@ -75,7 +75,7 @@ class PostListView(View):
 class PostDetailView(View):
     """Вывод полной статьи"""
     def get(self, request, **kwargs):
-        category_list = Category.objects.all()
+        category_list = Category.objects.filter(published=True)
         post = get_object_or_404(Post, slug=kwargs.get('slug'))
         # comments = Comment.objects.filter(post=post) #при выгрузке комментариев через views.py
         # tags = post.get_tags()
